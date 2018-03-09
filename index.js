@@ -1,7 +1,12 @@
 function storageSpace(storage) {
   const blockCache = {};
   function buildBlock(bytes) {
-    return blockCache[bytes] || (blockCache[bytes] = Array(bytes + 1).join('-'));
+    if (blockCache.bytes !== bytes) {
+      blockCache.bytes = bytes;
+      blockCache.string = Array(bytes + 1).join('-');
+    }
+
+    return blockCache.string;
   }
 
   function attemptAdd(size) {
