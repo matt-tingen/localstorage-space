@@ -1,16 +1,25 @@
 function storageSpace(storage) {
+  const baseBlockSize = 2048;
+  const baseBlock = repeat('-', baseBlockSize);
   const blockCache = {};
-  function buildBlock(bytes) {
+  function getBlock(bytes) {
     if (blockCache.bytes !== bytes) {
       blockCache.bytes = bytes;
-      blockCache.string = Array(bytes + 1).join('-');
+      blockCache.string =
+        bytes >= baseBlockSize
+          ? repeat(baseBlock, bytes / baseBlockSize + 1)
+          : repeat('-', bytes);
     }
 
     return blockCache.string;
   }
 
+  function repeat(string, n) {
+    return Array(n + 1).join(string);
+  }
+
   function attemptAdd(size) {
-    const block = buildBlock(size);
+    const block = getBlock(size);
     const key = BASE_KEY + maxKeyIndex.toString();
 
     try {
